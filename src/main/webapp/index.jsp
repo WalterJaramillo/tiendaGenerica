@@ -44,6 +44,9 @@
             </form>
         </div>
     </div>
+    <!-- Scripts Bootstrap & DataTables -->
+	<script type="text/javascript" src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/vendor/DataTables/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js" integrity="sha512-cyAbuGborsD25bhT/uz++wPqrh5cqPh1ULJz4NSpN9ktWcA6Hnh9g+CWKeNx2R0fgQt+ybRXdabSBgYXkQTTmA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
     <script type="text/javascript" src="assets/js/main.js"></script>
     <script>       
@@ -67,5 +70,13 @@
       }
 
     </script>
+    <%
+	if(request.getParameter("error")!=null){
+		String error = request.getParameter("error");
+		if(error.equals("400")){
+			out.print("<script type='text/javascript'>alert('Usuario o password incorrecto')</script>");
+		}
+	}
+	%>
 </body>
 </html>

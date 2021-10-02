@@ -52,7 +52,7 @@ public class Usuario extends HttpServlet {
 			usuario = request.getParameter("usuario");
 			password = request.getParameter("password");
 			
-			UsuarioDTO dto = new UsuarioDTO(cedula, email, nombre, usuario, password);
+			UsuarioDTO dto = new UsuarioDTO(cedula, email, nombre, password, usuario);
 			
 			if(dao.insertarUsuario(dto)) {
 				response.sendRedirect("usuarios.jsp?msj=Se ha registrado correctamente al usuario");

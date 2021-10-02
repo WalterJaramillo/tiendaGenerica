@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
 			if(usuario!=null) {
 				response.sendRedirect("usuarios.jsp");
 			}else {
-				response.sendRedirect("index.jsp?msj=Ocurrio un error");
+				response.sendRedirect("index.jsp?error=400");
 			}
 		}
 		
