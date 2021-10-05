@@ -1,56 +1,109 @@
 CREATE DATABASE  IF NOT EXISTS `tiendagenerica` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `tiendagenerica`;
--- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: tiendagenerica
--- ------------------------------------------------------
--- Server version	5.7.33
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+START TRANSACTION;
 
---
--- Table structure for table `usuario`
---
+CREATE TABLE `cliente` (
+  `cedula_cliente` bigint(20) NOT NULL,
+  `direccion_cliente` varchar(255) NULL,
+  `email_cliente` varchar(255) NULL,
+  `nombre_cliente` varchar(255) NULL,
+  `telefono_cliente` varchar(255) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `usuario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detalle_venta` (
+  `codigo_detalle_venta` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cantidad_producto` int(11) DEFAULT NULL,
+  `codigo_producto` bigint(20) DEFAULT NULL,
+  `codigo_venta` bigint(20) DEFAULT NULL,
+  `valor_total` double DEFAULT NULL,
+  `valor_venta` double DEFAULT NULL,
+  `valor_iva` double DEFAULT NULL
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `producto` (
+  `codigo_producto` bigint(20) NOT NULL,
+  `iva_compra` double DEFAULT NULL,
+  `nit_proveedor` bigint(20) NOT NULL,
+  `nombre_producto` varchar(255) DEFAULT NULL,
+  `precio_compra` double DEFAULT NULL,
+  `precio_venta` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `proveedor` (
+  `nit_proveedor` bigint(20) NOT NULL,
+  `ciudad_proveedor` varchar(255) DEFAULT NULL,
+  `direccion_proveedor` varchar(255) DEFAULT NULL,
+  `nombre_proveedor` varchar(255) DEFAULT NULL,
+  `telefono_proveedor` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `usuario` (
   `cedula_usuario` bigint(20) NOT NULL,
   `email_usuario` varchar(255) DEFAULT NULL,
   `nombre_usuario` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `usuario` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`cedula_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `usuario` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `usuario`
---
+CREATE TABLE `venta` (
+  `codigo_venta` bigint(20) NOT NULL,
+  `cedula_cliente` bigint(20) NOT NULL,
+  `cedula_usuario` bigint(20) NOT NULL,
+  `iva_venta` double DEFAULT NULL,
+  `total_venta` double DEFAULT NULL,
+  `valor_venta` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `usuario` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (123456789,'prueba@dominio.com','Usuario de prueba','user','user'),(246813579,'prueba3@dominio.com','Prueba 3','test3','test3'),(987654321,'prueba2@dominio.com','Usuario de prueba 2','usertest','123456');
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`cedula_cliente`);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+ALTER TABLE `detalle_venta`
+  ADD PRIMARY KEY (`codigo_detalle_venta`),
+  ADD KEY `codigo_venta` (`codigo_venta`),
+  ADD KEY `codigo_producto` (`codigo_producto`);
 
--- Dump completed on 2021-09-28 23:34:33
+ALTER TABLE `producto`
+  ADD PRIMARY KEY (`codigo_producto`,`nit_proveedor`),
+  ADD KEY `nit_proveedor` (`nit_proveedor`);
+
+ALTER TABLE `proveedor`
+  ADD PRIMARY KEY (`nit_proveedor`);
+
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`cedula_usuario`);
+
+ALTER TABLE `venta`
+  ADD PRIMARY KEY (`codigo_venta`,`cedula_cliente`,`cedula_usuario`),
+  ADD KEY `cedula_cliente` (`cedula_cliente`),
+  ADD KEY `cedula_usuario` (`cedula_usuario`);
+
+ALTER TABLE `cliente`
+  MODIFY `cedula_cliente` bigint(20) NOT NULL;
+
+ALTER TABLE `detalle_venta`
+  MODIFY `codigo_detalle_venta` bigint(20) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `producto`
+  MODIFY `codigo_producto` bigint(20) NOT NULL;
+
+ALTER TABLE `proveedor`
+  MODIFY `nit_proveedor` bigint(20) NOT NULL;
+
+ALTER TABLE `usuario`
+  MODIFY `cedula_usuario` bigint(20) NOT NULL ;
+
+ALTER TABLE `venta`
+  MODIFY `codigo_venta` bigint(20) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `detalle_venta`
+  ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`codigo_venta`) REFERENCES `venta` (`codigo_venta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`codigo_producto`) REFERENCES `producto` (`codigo_producto`);
+
+ALTER TABLE `producto`
+  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`nit_proveedor`) REFERENCES `proveedor` (`nit_proveedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `venta`
+  ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`cedula_cliente`) REFERENCES `cliente` (`cedula_cliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `venta_ibfk_2` FOREIGN KEY (`cedula_usuario`) REFERENCES `usuario` (`cedula_usuario`) ON DELETE CASCADE;
+COMMIT;

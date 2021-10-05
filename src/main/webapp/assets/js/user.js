@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	
+	//Funcion para datatable
 	tablaUsuarios = $("#tablaUsuarios").DataTable({
 	responsive: true,
 	"language": {
@@ -16,91 +18,122 @@ $(document).ready(function(){
 		},
 		"sProcessing":"Procesando...",
 	}
-});
-tablaUsuarios;
-$("#btnNuevo").click(function(){
-    $("#formUsuarios").trigger("reset");
-    $(".modal-header").css("background-color", "#28a745");
-    $(".modal-header").css("color", "white");
-    $(".modal-title").text("Nuevo usuario");            
-    $("#modalCRUD").modal("show");        
-    id=null;
-    opcion = 1; //dar de alta 
-});    
-    
-var fila; //capturar la fila para editar o borrar el registro
-    
-//botón EDITAR    
-$(document).on("click", ".btnEditar", function(){
-    fila = $(this).closest("tr");
-    cedula = parseInt(fila.find('td:eq(0)').text());
-    nombre = fila.find('td:eq(1)').text();
-    email = fila.find('td:eq(2)').text();
-    user = fila.find('td:eq(3)').text();
-    password = fila.find('td:eq(4)').text();
-    
-    $("#cedula").val(cedula);
-    $("#nombre").val(nombre);
-    $("#email").val(email);
-    $("#user").val(user);
-    $("#password").val(password);
-    opcion = 2; //editar
-    
-    $(".modal-header").css("background-color", "#007bff");
-    $(".modal-header").css("color", "white");
-    $(".modal-title").text("Editar Usuario");            
-    $("#modalCRUD").modal("show");  
-    
-});
-
-//botón BORRAR
-$(document).on("click", ".btnBorrar", function(){
-    fila = $(this);
-    cedula = parseInt($(this).closest("tr").find('td:eq(0)').text());
-    opcion = 3 //borrar
-    var respuesta = confirm("¿Está seguro de eliminar el registro: "+cedula+"?");
-    if(respuesta){
-		return true;
-		/*
-        $.ajax({
-            url: "users",
-            type: "POST",
-            dataType: "json",
-            data: {opcion:opcion, cedula:cedula},
-            success: function(){
-                tablaUsuarios.row(fila.parents('tr')).remove().draw();
-            }
-        });
-		*/
-    }else{
-		return false;
+	});
+	
+	//Funcion inicial para listar
+	$.ajax({
+		type:"post",
+   		url:"Usuario", //Servlet
+		data: "listar",
+		dataType:"json",
+		success: function(resultado){
+			for(let u of resultado){
+				tablaUsuarios.row.add(
+					[
+						`${u.cedulaUsuario}`,
+						`${u.emailUsuario}`,
+						`${u.nombreUsuario}`,
+						`${u.usuario}`,
+						'<div class="btn-group">'+
+						'<button type="button" name="'+`${u.cedulaUsuario}`+'"  class="btn btn-warning btnVer">Editar</button>'+
+						'<button type="button"  name="'+`${u.cedulaUsuario}`+'" class="btn btn-danger btnBorrar">Borrar</button>'+
+						'</div>'
+					]
+				)
+			}
+			tablaUsuarios.draw()
+			tablaUsuarios.columns.adjust().responsive.recalc();
+		}
+	});
+	
+	//Click boton borrar
+	tablaUsuarios.on('click', '.btnBorrar', function(){	
+		var cedula = $(this).attr("name")
+	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+cedula);
+	    if(opcion == true){
+			eliminarUsuario(cedula);
+		}else{
+		   
+		}
+	})
+	
+	//Click boton ver/editar
+	tablaUsuarios.on('click', '.btnVer', function(){
+		var cedula = $(this).attr("name")
+		verUsuario(cedula);
+	});
+	
+	//Funcion agregar usuario
+	$("#formAgregar").submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			type:"post",
+	   		url:"Usuario", //Servlet
+			data: $("#formAgregar").serialize(),
+			dataType:"json",
+			success: function(resultado){
+				if(resultado[0].estado=="Ok"){
+					alert("Registro ingreasdo");
+					window.location.replace("usuarios.jsp");
+				}
+			}
+		});
+	})
+	
+	//Funcion editar usuario
+	$("#formEditar").submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			type:"post",
+	   		url:"Usuario", //Servlet
+			data: $("#formEditar").serialize(),
+			dataType:"json",
+			success: function(resultado){
+				if(resultado[0].estado=="Ok"){
+					alert("Registro ingreasdo");
+					window.location.replace("usuarios.jsp");
+				}
+			}
+		});
+	})
+	
+	//Funcion eliminar usuario
+	function eliminarUsuario(id){
+		$.ajax({
+			type:"post",
+	   		url:"Usuario", //Servlet
+			data: "borrar=&cedula="+id,
+			dataType:"json",
+			success: function(resultado){
+				if(resultado[0].estado=="Ok"){
+					alert("Registro eliminado");
+					window.location.replace("usuarios.jsp");
+				}
+			}
+		});
 	}
-});
-    
-$("#formUsuarios").submit(function(e){
-    e.preventDefault();    
-    cedula = $.trim($("#cedula").val());
-    nombre = $.trim($("#nombre").val());
-    email = $.trim($("#email").val());    
-    user = $.trim($("#user").val());
-    password = $.trim($("#password").val());  
-    $.ajax({
-        url: "",  
-        type: "POST",
-        dataType: "json",
-        data: {cedula:cedula, nombre:nombre, email:email, user:user, password:password},
-        success: function(data){  
-            console.log(data);          
-            cedula = data[0].cedula;
-            nombre = data[0].nombre;
-            email = data[0].email;
-            user = data[0].user;
-            password = data[0].password;
-            if(opcion == 1){tablaUsuarios.row.add([cedula,nombre,email,user,password]).draw();}
-            else{tablaUsuarios.row(fila).data([cedula,nombre,email,user,password]).draw();}            
-        }        
-    });
-    $("#modalCRUD").modal("hide");    
-    
-});    
+	
+	//Funcion traer usuario
+	function verUsuario(id){
+		$.ajax({
+			type:"post",
+	   		url:"Usuario", //Servlet
+			data: "ver=&cedula="+id,
+			dataType:"json",
+			success: function(resultado){
+				console.log(resultado);
+				if(resultado!=null){
+					$("#cedula").val(resultado.cedulaUsuario)
+					$("#email").val(resultado.emailUsuario)
+					$("#nombre").val(resultado.nombreUsuario)
+					$("#usuario").val(resultado.usuario)
+					$("#password").val(resultado.password)
+				}
+				var modalEdit = new bootstrap.Modal(document.getElementById('modalEditarUsuario'))
+				modalEdit.show()
+			}
+		});
+	}
+	
+	
 });

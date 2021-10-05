@@ -1,13 +1,16 @@
 package controlador;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
 
 import modelo.UsuarioDAO;
 import modelo.UsuarioDTO;
@@ -39,12 +42,18 @@ public class Usuario extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UsuarioDAO dao = new UsuarioDAO();
 		
+		UsuarioDAO uDAO= new UsuarioDAO();
+		Gson json=new Gson();
+		PrintWriter salida= response.getWriter();
+		
+		/**
+		 * Insertar usuario
+		 */
 		if(request.getParameter("insertar")!=null) {
 			
 			long cedula;
-			String email, nombre, password, usuario;
+			String email, nombre, password, usuario, respuesta;
 			
 			cedula = Long.parseLong(request.getParameter("cedula"));
 			email = request.getParameter("email");
@@ -54,30 +63,85 @@ public class Usuario extends HttpServlet {
 			
 			UsuarioDTO dto = new UsuarioDTO(cedula, email, nombre, password, usuario);
 			
-			if(dao.insertarUsuario(dto)) {
-				response.sendRedirect("usuarios.jsp?msj=Se ha registrado correctamente al usuario");
+			if(uDAO.insertarUsuario(dto)) {
+				respuesta = "[{\"estado\":\"Ok\"}]";
+				salida.println(respuesta);	
 			}else {
-				response.sendRedirect("usuarios.jsp?msj=No se pudo registrar al usuario");
+				respuesta = "[{\"estado\":\"Error\"}]";
 			}
 		}
 		
-		if(request.getParameter("borrar")!=null) {
+		/**
+		 * Editar usuario
+		 */
+		if(request.getParameter("editar")!=null) {
+			
 			long cedula;
+			String email, nombre, password, usuario, respuesta;
+			
+			cedula = Long.parseLong(request.getParameter("cedula"));
+			email = request.getParameter("email");
+			nombre = request.getParameter("nombre");
+			usuario = request.getParameter("usuario");
+			password = request.getParameter("password");
+			
+			UsuarioDTO dto = new UsuarioDTO(cedula, email, nombre, password, usuario);
+			
+			if(uDAO.actualizarUsuario(dto)) {
+				respuesta = "[{\"estado\":\"Ok\"}]";
+				salida.println(respuesta);	
+			}else {
+				respuesta = "[{\"estado\":\"Error\"}]";
+			}
+		}
+		
+		/**
+		 * Borrar usuario
+		 */
+		if(request.getParameter("borrar")!=null) {
+			
+			long cedula;
+			String respuesta;
+			
 			cedula = Long.parseLong(request.getParameter("cedula"));
 			UsuarioDTO usuario = null;
-			try {
-				usuario = dao.obtenerPorCedula(cedula);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(dao.eliminarUsuario(usuario)) {
-				response.sendRedirect("usuarios.jsp?msj=Se ha eliminado al usuario");
+			usuario = uDAO.obtenerPorCedula(cedula);
+			if(uDAO.eliminarUsuario(usuario)) {
+				respuesta = "[{\"estado\":\"Ok\"}]";
+				salida.println(respuesta);	
 			}else {
-				response.sendRedirect("usuarios.jsp?msj=Ocurrio un error");
+				respuesta = "[{\"estado\":\"Error\"}]";
 			}
 		}
 		
+		/**
+		 * Ver usuario
+		 */
+		if(request.getParameter("ver")!=null) {
+			
+			long cedula;
+			String respuesta;
+			
+			cedula = Long.parseLong(request.getParameter("cedula"));
+			UsuarioDTO usuario = null;
+			usuario = uDAO.obtenerPorCedula(cedula);
+			if(usuario != null) {
+				salida.println(json.toJson(usuario));
+			}else {
+				respuesta = "[{\"estado\":\"Error\"}]";
+				salida.println(respuesta);
+			}
+		}
+		
+		/**
+		 * Convertir lista en formato JSON
+		 */
+		if(request.getParameter("listar")!=null) {
+			ArrayList<UsuarioDTO> lista=new ArrayList<>();
+			lista=uDAO.listarUsuarios();
+			salida.println(json.toJson(lista));	
+		}
+
 	}
 
 }

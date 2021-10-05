@@ -5,7 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import controlador.Conexion;
 
@@ -22,6 +23,7 @@ public class UsuarioDAO {
 	 * @return true/false
 	 */
 	public boolean insertarUsuario(UsuarioDTO dto) {
+		
 		boolean result = false;
 		try {
 			String sql = "INSERT INTO usuario VALUES(?,?,?,?,?)";
@@ -43,24 +45,26 @@ public class UsuarioDAO {
 	 * @return Lista
 	 * @throws SQLException
 	 */
-	public List<UsuarioDTO> listarUsuarios() throws SQLException {
+	public ArrayList<UsuarioDTO> listarUsuarios(){
 		
-		List<UsuarioDTO> listaUsuarios = new ArrayList<UsuarioDTO>();
-		String sql = "SELECT * FROM usuario";
-		ps = connect.prepareStatement(sql);
-		rs = ps.executeQuery();
- 
-		while (rs.next()) {
-			long cedula = rs.getLong("cedula_usuario");
-			String email = rs.getString("email_usuario");
-			String nombre = rs.getString("nombre_usuario");
-			String password = rs.getString("password");
-			String usuario = rs.getString("usuario");
-			UsuarioDTO uDTO = new UsuarioDTO(cedula, email, nombre, usuario, password);
-			listaUsuarios.add(uDTO);
+		UsuarioDTO uDTO = null;
+		ArrayList<UsuarioDTO> lista = new ArrayList<>();
+		
+		try {
+			String sql = "SELECT * FROM usuario";
+			ps = connect.prepareStatement(sql);
+			rs = ps.executeQuery();
+	 
+			while (rs.next()) {
+				uDTO = new UsuarioDTO(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+				lista.add(uDTO);
+			}
+			
+		}catch(SQLException ex) {
+			JOptionPane.showMessageDialog(null, "Error al cargar los libros: "+ex);
 		}
 		
-		return listaUsuarios;
+		return lista;
 	}
 	
 	/**
@@ -69,24 +73,45 @@ public class UsuarioDAO {
 	 * @return UsuarioDTO
 	 * @throws SQLException
 	 */
-	public UsuarioDTO obtenerPorCedula(long cedula) throws SQLException{
+	public UsuarioDTO obtenerPorCedula(long cedula){
 		UsuarioDTO usuario = null;
  
-		String sql = "SELECT * FROM usuario WHERE cedula_usuario= ? ";
-		ps = connect.prepareStatement(sql);
-		ps.setLong(1, cedula);
-		rs = ps.executeQuery();
- 
-		if (rs.next()) {
-			usuario = new UsuarioDTO(
-					rs.getLong("cedula_usuario"),
-					rs.getString("email_usuario"),
-					rs.getString("nombre_usuario"),
-					rs.getString("password"),
-					rs.getString("usuario")
-					);
+		try {
+			String sql = "SELECT * FROM usuario WHERE cedula_usuario= ? ";
+			ps = connect.prepareStatement(sql);
+			ps.setLong(1, cedula);
+			rs = ps.executeQuery();
+	 
+			if (rs.next()) {
+				usuario = new UsuarioDTO(
+						rs.getLong("cedula_usuario"),
+						rs.getString("email_usuario"),
+						rs.getString("nombre_usuario"),
+						rs.getString("password"),
+						rs.getString("usuario")
+						);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
 		}
 		return usuario;
+	}
+	
+	public boolean actualizarUsuario(UsuarioDTO dto) {
+		boolean result = false;
+		try {
+			String sql = "UPDATE usuario SET email_usuario=?, nombre_usuario=?, password=?, usuario=? WHERE cedula_usuario=?";
+			ps = connect.prepareStatement(sql);
+			ps.setString(1, dto.getEmailUsuario());
+			ps.setString(2, dto.getNombreUsuario());
+			ps.setString(3, dto.getPassword());
+			ps.setString(4, dto.getUsuario());
+			ps.setLong(5, dto.getCedulaUsuario());
+			result = ps.executeUpdate()>0;
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return result;	
 	}
 	
 	/**
@@ -107,6 +132,13 @@ public class UsuarioDAO {
 		return result;
 	}
 	
+	/**
+	 * Funcion Login del sistema
+	 * @param u usuario
+	 * @param p password
+	 * @return
+	 * @throws SQLException
+	 */
 	public UsuarioDTO loginUsuario(String u, String p) throws SQLException{
 		UsuarioDTO usuario = null;
  
