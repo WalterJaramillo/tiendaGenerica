@@ -6,7 +6,7 @@
 	    <meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	    <link rel="shortcut icon" href="#" />  
-	    <title>Users</title>
+	    <title>Clientes</title>
 	      
 	    <!-- Bootstrap CSS & Style CSS-->
 	    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<header class="bg-blue pt-2 pb-1">
-			<h4 class="text-center text-light">CRUD Usuarios
+			<h4 class="text-center text-light">CRUD Clientes
 				<span class="badge bg-danger">Mintic</span>
 			</h4>
 		</header>
@@ -35,9 +35,10 @@
 						<thead>
 							<tr>
 								<th>Cedula</th>
+								<th>Direccion</th>
 								<th>Email</th>
 								<th>Nombre</th>
-								<th>Usuario</th>
+								<th>Telefono</th>
 								<th>Acciones</th>
 							</tr>
 						</thead>
@@ -65,6 +66,10 @@
 							<input type="tel" class="form-control" name="cedula" required>
 						</div>
 						<div class="col-sm-12">
+							<label for="direccion" class="form-label">Direccion</label>
+							<input type="text" class="form-control" name="direccion" required>
+						</div>
+						<div class="col-sm-12">
 							<label for="email" class="form-label">Email</label>
 							<input type="email" class="form-control" name="email" required>
 						</div>
@@ -73,12 +78,8 @@
 							<input type="text" class="form-control" name="nombre" required>
 						</div>
 						<div class="col-sm-12">
-							<label for="usuario" class="form-label">Nombre de Usuario</label>
-							<input type="text" class="form-control" name="usuario" required>
-						</div>
-						<div class="col-sm-12">
-							<label for="password" class="form-label">Password</label>
-							<input type="password" class="form-control" name="password" required>
+							<label for="telefono" class="form-label">Telefono</label>
+							<input type="tel" class="form-control" name="telefono" required>
 						</div>
 						<div class="col-sm-12 mt-3">
 							<button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>
@@ -103,23 +104,23 @@
 					<input type="hidden" name="editar" value="">
 						<div class="col-sm-12">
 							<label for="cedula" class="form-label">C&eacute;dula</label>
-							<input type="tel" class="form-control" id="cedula" name="cedula" readonly>
+							<input type="tel" class="form-control" name="cedula" id="cedula" readonly required>
+						</div>
+						<div class="col-sm-12">
+							<label for="direccion" class="form-label">Direccion</label>
+							<input type="text" class="form-control" name="direccion" id="direccion" required>
 						</div>
 						<div class="col-sm-12">
 							<label for="email" class="form-label">Email</label>
-							<input type="email" class="form-control" id="email" name="email" required>
+							<input type="email" class="form-control" name="email" id="email" required>
 						</div>
 						<div class="col-sm-12">
 							<label for="nombre" class="form-label">Nombre</label>
-							<input type="text" class="form-control" id="nombre" name="nombre" required>
+							<input type="text" class="form-control" name="nombre" id="nombre" required>
 						</div>
 						<div class="col-sm-12">
-							<label for="usuario" class="form-label">Nombre de Usuario</label>
-							<input type="text" class="form-control" id="usuario" name="usuario" required>
-						</div>
-						<div class="col-sm-12">
-							<label for="password" class="form-label">Password</label>
-							<input type="password" class="form-control" id="password" name="password" required>
+							<label for="telefono" class="form-label">Telefono</label>
+							<input type="tel" class="form-control" name="telefono" id="telefono" required>
 						</div>
 						<div class="col-sm-12 mt-3">
 							<button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>
@@ -135,6 +136,6 @@
 	<script type="text/javascript" src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="assets/vendor/DataTables/datatables.min.js"></script>
 	<!-- Script Usuarios -->
-	<script type="text/javascript" src="assets/js/user.js"></script>
+	<script type="text/javascript" src="assets/js/client.js"></script>
 	</body>
 </html>

@@ -5,7 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import controlador.Conexion;
 
@@ -44,53 +45,87 @@ public class ProductoDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<ProductoDTO> listarProductos() throws SQLException {
+	public ArrayList<ProductoDTO> listarProductos(){
 		
-		List<ProductoDTO> listaProductos = new ArrayList<ProductoDTO>();
-		String sql = "SELECT * FROM producto";
-		ps = connect.prepareStatement(sql);
-		rs = ps.executeQuery();
- 
-		while (rs.next()) {
-			long codigoProducto = rs.getLong("codigo_producto");
-			double ivaCompra = rs.getDouble("iva_compra");
-			long nitProveedor = rs.getLong("nit_proveedor");
-			String nombreProducto = rs.getString("nombre_producto");
-			double precioCompra = rs.getDouble("precio_compra");
-			double precioVenta = rs.getDouble("precio_venta");
-			ProductoDTO pDTO = new ProductoDTO(codigoProducto, ivaCompra, nitProveedor, nombreProducto, precioCompra, precioVenta);
-			listaProductos.add(pDTO);
+		ProductoDTO pDTO = null;
+		ArrayList<ProductoDTO> lista = new ArrayList<>();
+		
+		try {
+			String sql = "SELECT * FROM producto";
+			ps = connect.prepareStatement(sql);
+			rs = ps.executeQuery();
+	 
+			while (rs.next()) {
+				pDTO = new ProductoDTO(
+					rs.getLong(1),
+					rs.getDouble(2),
+					rs.getLong(3),
+					rs.getString(4),
+					rs.getDouble(5),
+					rs.getDouble(6)
+				);
+				lista.add(pDTO);
+			}
+			
+		}catch(SQLException ex) {
+			JOptionPane.showMessageDialog(null, "Error al cargar los productos: "+ex);
 		}
 		
-		return listaProductos;
+		return lista;
 	}
 	
 	/**
 	 * Funcion para buscar por codigo de producto
-	 * @param cedula
+	 * @param codigo
 	 * @return
 	 * @throws SQLException
 	 */
-	public ProductoDTO obtenerPorCodigo(long codigoProducto) throws SQLException{
-		
+	public ProductoDTO obtenerPorCodigo(long codigo){
 		ProductoDTO producto = null;
  
-		String sql = "SELECT * FROM producto WHERE codigo_producto = ? ";
-		ps = connect.prepareStatement(sql);
-		ps.setLong(1, codigoProducto);
-		rs = ps.executeQuery();
- 
-		if (rs.next()) {
-			producto = new ProductoDTO(
-					rs.getLong("codigo_producto"),
-					rs.getDouble("iva_compra"),
-					rs.getLong("nit_proveedor"),
-					rs.getString("nombre_producto"),
-					rs.getDouble("precio_compra"),
-					rs.getDouble("precio_venta")
-					);
+		try {
+			String sql = "SELECT * FROM producto WHERE codigo_producto= ? ";
+			ps = connect.prepareStatement(sql);
+			ps.setLong(1, codigo);
+			rs = ps.executeQuery();
+	 
+			if (rs.next()) {
+				producto = new ProductoDTO(
+					rs.getLong(1),
+					rs.getDouble(2),
+					rs.getLong(3),
+					rs.getString(4),
+					rs.getDouble(5),
+					rs.getDouble(6)
+				);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
 		}
 		return producto;
+	}
+	
+	/**
+	 * Funcion para editar producto
+	 * @param dto
+	 * @return
+	 */
+	public boolean actualizarProducto(ProductoDTO dto) {
+		boolean result = false;
+		try {
+			String sql = "UPDATE producto SET iva_compra=?, nit_proveedor=?, nombre_producto=?, precio_compra=?, precio_venta=? WHERE codigo_producto=?";
+			ps = connect.prepareStatement(sql);
+			ps.setDouble(1, dto.getIvaCompra());
+			ps.setLong(2, dto.getNitProveedor());
+			ps.setString(3, dto.getNombreProducto());
+			ps.setDouble(4, dto.getPrecioCompra());
+			ps.setDouble(5, dto.getPrecioVenta());
+			ps.setLong(6, dto.getCodigoProducto());
+			result = ps.executeUpdate()>0;
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return result;	
 	}
 	
 	/**
