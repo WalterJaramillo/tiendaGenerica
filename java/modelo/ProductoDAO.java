@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import controlador.Conexion;
 
 public class ProductoDAO {
@@ -41,9 +39,27 @@ public class ProductoDAO {
 	}
 	
 	/**
+	 * Funcion para cargar productos desde CSV en DB
+	 * @param URL
+	 * @return
+	 */
+	public boolean cargarProductos(String URL) {
+		
+		boolean resul=false;
+		try {
+			
+		String sql="load data infile '"+URL+"' into table producto fields terminated by ',' lines terminated by '\r\n' IGNORE 1 LINES";
+		ps = connect.prepareStatement(sql);
+		resul=ps.executeUpdate()>0;
+		}catch(SQLException ex) {
+			ex.printStackTrace();
+		}
+		return resul;
+	}
+	
+	/**
 	 * Funcion para listar productos desde la DB
 	 * @return
-	 * @throws SQLException
 	 */
 	public ArrayList<ProductoDTO> listarProductos(){
 		
@@ -68,7 +84,7 @@ public class ProductoDAO {
 			}
 			
 		}catch(SQLException ex) {
-			JOptionPane.showMessageDialog(null, "Error al cargar los productos: "+ex);
+			ex.printStackTrace();
 		}
 		
 		return lista;

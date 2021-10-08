@@ -76,7 +76,6 @@ public class ProveedorDAO {
 	 * Funcion para buscar por Nit de proveedor
 	 * @param nit
 	 * @return
-	 * @throws SQLException
 	 */
 	public ProveedorDTO obtenerPorNit(long nit){
 		ProveedorDTO proveedor = null;
@@ -110,7 +109,7 @@ public class ProveedorDAO {
 	public boolean actualizarProveedor(ProveedorDTO dto) {
 		boolean result = false;
 		try {
-			String sql = "UPDATE producto SET ciudad_proveedor=?, direccion_proveedor=?, nombre_proveedor=?, telefono_proveedor=? WHERE nit_proveedor=?";
+			String sql = "UPDATE proveedor  SET ciudad_proveedor=?, direccion_proveedor=?, nombre_proveedor=?, telefono_proveedor=? WHERE nit_proveedor=?";
 			ps = connect.prepareStatement(sql);
 			ps.setString(1, dto.getCiudadProveedor());
 			ps.setString(2, dto.getDireccionProveedor());

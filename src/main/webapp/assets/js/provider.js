@@ -23,21 +23,21 @@ $(document).ready(function(){
 	//Funcion inicial para listar
 	$.ajax({
 		type:"post",
-   		url:"Cliente", //Servlet
+   		url:"Proveedor", //Servlet
 		data: "listar",
 		dataType:"json",
 		success: function(resultado){
 			for(let u of resultado){
 				tablaUsuarios.row.add(
 					[
-						`${u.cedulaCliente}`,
-						`${u.direccionCliente}`,
-						`${u.emailCliente}`,
-						`${u.nombreCliente}`,
-						`${u.telefonoCliente}`,
+						`${u.nitProveedor}`,
+						`${u.ciudadProveedor}`,
+						`${u.direccionProveedor}`,
+						`${u.nombreProveedor}`,
+						`${u.telefonoProveedor}`,
 						'<div class="btn-group">'+
-						'<button type="button" name="'+`${u.cedulaCliente}`+'"  class="btn btn-warning btnVer">Editar</button>'+
-						'<button type="button"  name="'+`${u.cedulaCliente}`+'" class="btn btn-danger btnBorrar">Borrar</button>'+
+						'<button type="button" name="'+`${u.nitProveedor}`+'"  class="btn btn-warning btnVer">Editar</button>'+
+						'<button type="button"  name="'+`${u.nitProveedor}`+'" class="btn btn-danger btnBorrar">Borrar</button>'+
 						'</div>'
 					]
 				)
@@ -49,10 +49,10 @@ $(document).ready(function(){
 	
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
-		var cedula = $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+cedula);
+		var nit= $(this).attr("name")
+	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+nit);
 	    if(opcion == true){
-			eliminarCliente(cedula);
+			eliminarProveedor(nit);
 		}else{
 		   
 		}
@@ -60,75 +60,75 @@ $(document).ready(function(){
 	
 	//Click boton ver/editar
 	tablaUsuarios.on('click', '.btnVer', function(){
-		var cedula = $(this).attr("name")
-		verCliente(cedula);
+		var nit = $(this).attr("name")
+		verProveedor(nit);
 	});
 	
-	//Funcion agregar cliente
+	//Funcion agregar usuario
 	$("#formAgregar").submit(function(e){
 		e.preventDefault();
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
+	   		url:"Proveedor", //Servlet
 			data: $("#formAgregar").serialize(),
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
 					alert("Registro ingresado");
-					window.location.replace("clientes.jsp");
+					window.location.replace("proveedores.jsp");
 				}
 			}
 		});
 	})
 	
-	//Funcion editar cliente
+	//Funcion editar usuario
 	$("#formEditar").submit(function(e){
 		e.preventDefault();
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
+	   		url:"Proveedor", //Servlet
 			data: $("#formEditar").serialize(),
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
 					alert("Registro actualizado");
-					window.location.replace("clientes.jsp");
+					window.location.replace("proveedores.jsp");
 				}
 			}
 		});
 	})
 	
 	//Funcion eliminar usuario
-	function eliminarCliente(id){
+	function eliminarProveedor(id){
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
-			data: "borrar=&cedula="+id,
+	   		url:"Proveedor", //Servlet
+			data: "borrar=&nit="+id,
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
 					alert("Registro eliminado");
-					window.location.replace("clientes.jsp");
+					window.location.replace("proveedores.jsp");
 				}
 			}
 		});
 	}
 	
 	//Funcion traer usuario
-	function verCliente(id){
+	function verProveedor(id){
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
-			data: "ver=&cedula="+id,
+	   		url:"Proveedor", //Servlet
+			data: "ver=&nit="+id,
 			dataType:"json",
 			success: function(resultado){
 				console.log(resultado);
 				if(resultado!=null){
-					$("#cedula").val(resultado.cedulaCliente)
-					$("#direccion").val(resultado.direccionCliente)
-					$("#email").val(resultado.emailCliente)
-					$("#nombre").val(resultado.nombreCliente)
-					$("#telefono").val(resultado.telefonoCliente)
+					$("#nit").val(resultado.nitProveedor)
+					$("#ciudad").val(resultado.ciudadProveedor)
+					$("#direccion").val(resultado.direccionProveedor)
+					$("#nombre").val(resultado.nombreProveedor)
+					$("#telefono").val(resultado.telefonoProveedor)
 				}
 				var modalEdit = new bootstrap.Modal(document.getElementById('modalEditarUsuario'))
 				modalEdit.show()

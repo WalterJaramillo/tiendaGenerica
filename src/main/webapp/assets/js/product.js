@@ -23,21 +23,22 @@ $(document).ready(function(){
 	//Funcion inicial para listar
 	$.ajax({
 		type:"post",
-   		url:"Cliente", //Servlet
+   		url:"Producto", //Servlet
 		data: "listar",
 		dataType:"json",
 		success: function(resultado){
 			for(let u of resultado){
 				tablaUsuarios.row.add(
 					[
-						`${u.cedulaCliente}`,
-						`${u.direccionCliente}`,
-						`${u.emailCliente}`,
-						`${u.nombreCliente}`,
-						`${u.telefonoCliente}`,
+						`${u.codigoProducto}`,
+						`${u.nitProveedor}`,
+						`${u.ivaCompra}`,
+						`${u.nombreProducto}`,
+						`${u.precioCompra}`,
+						`${u.precioVenta}`,
 						'<div class="btn-group">'+
-						'<button type="button" name="'+`${u.cedulaCliente}`+'"  class="btn btn-warning btnVer">Editar</button>'+
-						'<button type="button"  name="'+`${u.cedulaCliente}`+'" class="btn btn-danger btnBorrar">Borrar</button>'+
+						'<button type="button" name="'+`${u.codigoProducto}`+'"  class="btn btn-warning btnVer">Editar</button>'+
+						'<button type="button"  name="'+`${u.codigoProducto}`+'" class="btn btn-danger btnBorrar">Borrar</button>'+
 						'</div>'
 					]
 				)
@@ -49,10 +50,10 @@ $(document).ready(function(){
 	
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
-		var cedula = $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+cedula);
+		var codigo = $(this).attr("name")
+	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+codigo);
 	    if(opcion == true){
-			eliminarCliente(cedula);
+			eliminarProducto(codigo);
 		}else{
 		   
 		}
@@ -60,75 +61,84 @@ $(document).ready(function(){
 	
 	//Click boton ver/editar
 	tablaUsuarios.on('click', '.btnVer', function(){
-		var cedula = $(this).attr("name")
-		verCliente(cedula);
+		var codigo = $(this).attr("name")
+		verProducto(codigo);
 	});
 	
-	//Funcion agregar cliente
+	//Funcion agregar producto
 	$("#formAgregar").submit(function(e){
+		var form = $('#formAgregar')[0];
+		var data = new FormData(form);
 		e.preventDefault();
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
-			data: $("#formAgregar").serialize(),
-			dataType:"json",
+	   		url:"Producto", //Servlet
+			data: data,
+	        enctype: 'multipart/form-data',
+	        processData: false,  // Important!
+	        contentType: false,
+	        cache: false,
 			success: function(resultado){
+				resultado = JSON.parse(resultado);
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingresado");
-					window.location.replace("clientes.jsp");
+					alert("Productos ingresados");
+					window.location.replace("productos.jsp");
+				}else{
+					alert(resultado[0].estado);
 				}
 			}
 		});
 	})
 	
-	//Funcion editar cliente
+	//Funcion editar usuario
 	$("#formEditar").submit(function(e){
 		e.preventDefault();
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
+	   		url:"Producto", //Servlet
 			data: $("#formEditar").serialize(),
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
 					alert("Registro actualizado");
-					window.location.replace("clientes.jsp");
+					window.location.replace("productos.jsp");
 				}
 			}
 		});
 	})
 	
 	//Funcion eliminar usuario
-	function eliminarCliente(id){
+	function eliminarProducto(id){
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
-			data: "borrar=&cedula="+id,
+	   		url:"Producto", //Servlet
+			data: "borrar=&codigo="+id,
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
 					alert("Registro eliminado");
-					window.location.replace("clientes.jsp");
+					window.location.replace("productos.jsp");
 				}
 			}
 		});
 	}
 	
-	//Funcion traer usuario
-	function verCliente(id){
+	//Funcion traer producto
+	function verProducto(id){
 		$.ajax({
 			type:"post",
-	   		url:"Cliente", //Servlet
-			data: "ver=&cedula="+id,
+	   		url:"Producto", //Servlet
+			data: "ver=&codigo="+id,
 			dataType:"json",
 			success: function(resultado){
 				console.log(resultado);
 				if(resultado!=null){
-					$("#cedula").val(resultado.cedulaCliente)
-					$("#direccion").val(resultado.direccionCliente)
-					$("#email").val(resultado.emailCliente)
-					$("#nombre").val(resultado.nombreCliente)
-					$("#telefono").val(resultado.telefonoCliente)
+					$("#codigo").val(resultado.codigoProducto);
+					$("#ivaCompra").val(resultado.ivaCompra);
+					$("#nitProveedor").val(resultado.nitProveedor);
+					$("#nombre").val(resultado.nombreProducto);
+					$("#precioCompra").val(resultado.precioCompra);
+					$("#precioVenta").val(resultado.precioVenta);
 				}
 				var modalEdit = new bootstrap.Modal(document.getElementById('modalEditarUsuario'))
 				modalEdit.show()

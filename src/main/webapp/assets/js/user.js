@@ -73,7 +73,7 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingreasdo");
+					alert("Registro ingresado");
 					window.location.replace("usuarios.jsp");
 				}
 			}
@@ -90,7 +90,7 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingreasdo");
+					alert("Registro actualizado");
 					window.location.replace("usuarios.jsp");
 				}
 			}
