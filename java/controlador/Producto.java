@@ -139,16 +139,21 @@ public class Producto extends HttpServlet {
 			
 			long codigo;
 			String respuesta;
-			
-			codigo = Long.parseLong(request.getParameter("codigo"));
-			ProductoDTO producto = null;
-			producto = pDAO.obtenerPorCodigo(codigo);
-			if(producto != null) {
-				salida.println(json.toJson(producto));
-			}else {
+			if(request.getParameter("codigo")==null || request.getParameter("codigo")==""){
 				respuesta = "[{\"estado\":\"Error\"}]";
 				salida.println(respuesta);
+			}else {
+				codigo = Long.parseLong(request.getParameter("codigo"));
+				ProductoDTO producto = null;
+				producto = pDAO.obtenerPorCodigo(codigo);
+				if(producto != null) {
+					salida.println(json.toJson(producto));
+				}else {
+					respuesta = "[{\"estado\":\"Error\"}]";
+					salida.println(respuesta);
+				}
 			}
+			
 		}
 		
 		/**

@@ -3,6 +3,7 @@ $(document).ready(function(){
 	//Funcion para datatable
 	tablaUsuarios = $("#tablaUsuarios").DataTable({
 	responsive: true,
+	"ordering": false,
 	"language": {
 		"lengthMenu": "Mostrar _MENU_ registros",
 		"zeroRecords": "No se encontraron resultados",

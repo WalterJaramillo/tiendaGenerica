@@ -120,16 +120,21 @@ public class Cliente extends HttpServlet {
 			
 			long cedula;
 			String respuesta;
-			
-			cedula = Long.parseLong(request.getParameter("cedula"));
-			ClienteDTO cliente = null;
-			cliente = cDAO.obtenerPorCedula(cedula);
-			if(cliente!= null) {
-				salida.println(json.toJson(cliente));
-			}else {
+			if(request.getParameter("cedula")==null || request.getParameter("cedula")==""){
 				respuesta = "[{\"estado\":\"Error\"}]";
 				salida.println(respuesta);
+			}else {
+				cedula = Long.parseLong(request.getParameter("cedula"));
+				ClienteDTO cliente = null;
+				cliente = cDAO.obtenerPorCedula(cedula);
+				if(cliente!= null) {
+					salida.println(json.toJson(cliente));
+				}else {
+					respuesta = "[{\"estado\":\"Error\"}]";
+					salida.println(respuesta);
+				}
 			}
+			
 		}
 		
 		/**
