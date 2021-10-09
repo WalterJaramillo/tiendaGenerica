@@ -18,8 +18,10 @@ $(document).ready(function(){
 					$("#direccionCliente").html(resultado.direccionCliente);
 					$("#emailCliente").html(resultado.emailCliente);
 					$("#telefonoCliente").html(resultado.telefonoCliente);
+					$(".panelVentas").removeClass("d-none").show();
 				}else{
 					$("#cedula, #nombreCliente, #direccionCliente, #emailCliente, #telefonoCliente").html("");
+					$(".panelVentas").hide();
 					alert("Ocurrio un error");
 				}
 			}
@@ -41,7 +43,10 @@ $(document).ready(function(){
 					td.parent().next().children().val(resultado.nombreProducto);
 					td.parent().next().next().next().children().val(resultado.precioVenta);
 					td.parent().next().next().next().children().attr("data-value",resultado.precioVenta);
+					td.parent().next().next().next().children().attr("data-iva",resultado.ivaCompra);
 				}else{
+					td.val("");
+					td.attr("value", "");
 					alert("Ocurrio un error");
 					td.parent().next().children().val("");
 					td.parent().next().next().next().children().val(0);
@@ -68,12 +73,17 @@ $(document).ready(function(){
 	
 	function calcularTotal(){
 		var subtotal = 0;
-		var iva=19;
+		var iva = 0;
 		$('.valorProducto').each(function(){
 		    subtotal += parseFloat($(this).attr("value"));
+			if(isNaN(parseFloat($(this).attr("data-iva")))) {
+				iva += 0;
+			}else{
+				iva += parseFloat($(this).attr("data-iva"))*parseFloat($(this).attr("value"))/100;
+			}
 		});
 		$(".subTotal").html(subtotal);
-		var valorIva = (subtotal*iva)/100;
+		var valorIva = (iva);
 		$(".valorIVA").html(valorIva);
 		$(".valorTotal").html(subtotal+valorIva);
 		//Pasar datos a formulario
@@ -81,5 +91,29 @@ $(document).ready(function(){
 		$("#iva").val(valorIva);
 		$("#total").val(subtotal+valorIva);
 	}
+	
+	//Funcion Venta
+	$("#formularioVenta").submit(function(e){
+		e.preventDefault();
+		var data = $("#formularioVenta").serialize();
+		$.ajax({
+			type:"post",
+	   		url:"Venta", //Servlet
+			data: data,
+			dataType:"json",
+			success: function(resultado){
+				if(resultado[0].estado=="Ok"){
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Venta realizada",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("ventas.jsp");
+					  }, 800);
+				}
+			}
+		});
+	});
 	
 });

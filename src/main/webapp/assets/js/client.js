@@ -51,12 +51,20 @@ $(document).ready(function(){
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
 		var cedula = $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+cedula);
-	    if(opcion == true){
-			eliminarCliente(cedula);
-		}else{
-		   
-		}
+	 	Swal.fire({
+			title: "Cuidado!",
+		  	text: "Esta seguro de eliminar el registro "+cedula+"?",
+		  	icon: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: '#3085d6',
+		  	cancelButtonColor: '#d33',
+		  	confirmButtonText: "Si, borrar el registro!",
+			cancelButtonText: "Cancelar"
+		}).then((result) => {
+			if (result.isConfirmed) {
+				eliminarCliente(cedula);
+		  	}
+		});
 	})
 	
 	//Click boton ver/editar
@@ -75,8 +83,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingresado");
-					window.location.replace("clientes.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Cliente agregado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("clientes.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -92,8 +106,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro actualizado");
-					window.location.replace("clientes.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Cliente actualizado",
+					  	"success"
+					);
+					setTimeout(function(){
+					    window.location.replace("clientes.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -108,8 +128,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro eliminado");
-					window.location.replace("clientes.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Cliente eliminado",
+					  	"success"
+					);
+					setTimeout(function(){
+					    window.location.replace("usuarios.jsp");
+					  }, 800);
 				}
 			}
 		});

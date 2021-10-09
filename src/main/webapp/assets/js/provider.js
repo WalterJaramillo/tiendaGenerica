@@ -51,12 +51,20 @@ $(document).ready(function(){
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
 		var nit= $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+nit);
-	    if(opcion == true){
-			eliminarProveedor(nit);
-		}else{
-		   
-		}
+	 	Swal.fire({
+			title: "Cuidado!",
+		  	text: "Esta seguro de eliminar el registro "+codigo+"?",
+		  	icon: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: '#3085d6',
+		  	cancelButtonColor: '#d33',
+		  	confirmButtonText: "Si, borrar el registro!",
+			cancelButtonText: "Cancelar"
+		}).then((result) => {
+			if (result.isConfirmed) {
+				eliminarProveedor(nit);
+		  	}
+		});
 	})
 	
 	//Click boton ver/editar
@@ -75,8 +83,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingresado");
-					window.location.replace("proveedores.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Proveedor agregado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("proveedores.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -92,8 +106,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro actualizado");
-					window.location.replace("proveedores.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Proveedor actualizado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("proveedores.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -108,8 +128,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro eliminado");
-					window.location.replace("proveedores.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Proveedor eliminado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("proveedores.jsp");
+					  }, 800);
 				}
 			}
 		});

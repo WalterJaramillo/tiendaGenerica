@@ -50,12 +50,20 @@ $(document).ready(function(){
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
 		var cedula = $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+cedula);
-	    if(opcion == true){
-			eliminarUsuario(cedula);
-		}else{
-		   
-		}
+		Swal.fire({
+			title: "Cuidado!",
+		  	text: "Esta seguro de eliminar el registro "+cedula+"?",
+		  	icon: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: '#3085d6',
+		  	cancelButtonColor: '#d33',
+		  	confirmButtonText: "Si, borrar el registro!",
+			cancelButtonText: "Cancelar"
+		}).then((result) => {
+			if (result.isConfirmed) {
+				eliminarUsuario(cedula);
+		  	}
+		});
 	})
 	
 	//Click boton ver/editar
@@ -74,8 +82,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro ingresado");
-					window.location.replace("usuarios.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Usuario agregado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("usuarios.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -91,8 +105,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro actualizado");
-					window.location.replace("usuarios.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Usuario actualizado",
+					  	"success"
+					);
+					setTimeout(function(){
+					    window.location.replace("usuarios.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -107,8 +127,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro eliminado");
-					window.location.replace("usuarios.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Usuario eliminado",
+					  	"success"
+					);
+					setTimeout(function(){
+					    window.location.replace("usuarios.jsp");
+					  }, 800);
 				}
 			}
 		});

@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="modelo.VentaDAO" %>
+<%
+	VentaDAO dao = new VentaDAO();
+%>
 <!doctype html>
 <html lang="es">
  	<head>
@@ -6,7 +10,7 @@
 	    <meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	    <link rel="shortcut icon" href="#" />  
-	    <title>Proveedores</title>
+	    <title>Ventas</title>
 	      
 	    <!-- Bootstrap CSS & Style CSS-->
 	    <link rel="stylesheet" href="assets/css/styles.css">
@@ -69,6 +73,18 @@
                                 <span class="sb-nav-link-icon"><i class="fas fa-credit-card"></i></span>
                                 Ventas
                             </a>
+                            <a class="nav-link collapsed" href="#collapseReportes" data-bs-toggle="collapse" data-bs-target="#collapseReportes" >
+                                <span class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></span>
+                                Reportes
+                                <span class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></span>
+                            </a>
+                            <div class="collapse" id="collapseReportes" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="reporteUsuarios.jsp">Usuarios</a>
+                                    <a class="nav-link" href="reporteClientes.jsp">Clientes</a>
+                                    <a class="nav-link" href="reporteVentasCliente.jsp">Ventas por cliente</a>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -101,7 +117,7 @@
 		               		</div>
 		               	</div>
 		                
-		                <div class="row mt-2">
+		                <div class="row mt-2 d-none panelVentas">
 		                    <div class="col-sm-6">
 		                        <div>
 		                            <span id="nombreCliente" class="text-600 text-110 text-blue align-middle"></span>
@@ -117,19 +133,23 @@
 
 		                        <div class="text-grey-m2">
 		                            <div class="text-600 text-110 text-blue align-middl">
-		                                # Venta : <span id="codigoVenta">1</span>
+		                                Codigo Venta : <span id="codigoVenta"><%=dao.consecutivoVenta() %></span>
 		                            </div>
 		                        </div>
 		                    </div>
 		                    
 		                </div>
 		
-		                <div class="row mt-4">
+		                <div class="row mt-4 d-none panelVentas">
 		                	<form id="formularioVenta">
-		                	<input type="hidden" id="cedula">
-		                	<input type="hidden" id="subtotal">
-		                	<input type="hidden" id="iva">
-		                	<input type="hidden" id="total">
+		                	<input type="hidden" name="insertar" value="">
+		                	<input type="hidden" name="codigoVenta" id="codigoVenta" value="<%=dao.consecutivoVenta() %>">
+		                	<input type="hidden" name="cedulaCliente" id="cedula">
+		                	<!-- //TODO sesion para usuario  -->
+		                	<input type="hidden" name="cedulaUsuario" value="123456789">
+		                	<input type="hidden" name="ivaVenta" id="iva">
+		                	<input type="hidden" name="totalVenta" id="subtotal">
+		                	<input type="hidden" name="valorVenta" id="total">
 				            <div class="table-responsive">
 				                <table class="table table-striped table-borderless border-0 border-b-2 brc-default-l1">
 				                    <thead class="bg-none bg-blue">
@@ -145,13 +165,13 @@
 				                    	<!-- Producto 1 -->
 				                        <tr>
 				                            <td width="20%">
-				                            	<input type="text" class="form-control codigoProducto">
+				                            	<input type="text" name="codp1" class="form-control codigoProducto">
 				                            </td>
 				                            <td>
 				                            	<input type="text" readonly class="form-control nombreProducto">
 				                            </td>
 				                            <td width="10%">
-				                            	<input type="number" name="cantidadProducto" class="form-control cantidadProducto">
+				                            	<input type="number" name="canp1" class="form-control cantidadProducto">
 				                            </td>
 				                             <td class="text-end" width="15%">
 				                            	<input type="text" readonly class="form-control text-end valorProducto">
@@ -160,13 +180,13 @@
 				                        <!-- Producto 2 -->
 				                        <tr>
 				                            <td width="20%">
-				                            	<input type="text" class="form-control codigoProducto">
+				                            	<input type="text" name="codp2" class="form-control codigoProducto">
 				                            </td>
 				                            <td>
 				                            	<input type="text" readonly class="form-control nombreProducto">
 				                            </td>
 				                            <td width="10%">
-				                            	<input type="number" name="cantidadProducto" class="form-control cantidadProducto">
+				                            	<input type="number" name="canp2" class="form-control cantidadProducto">
 				                            </td>
 				                             <td class="text-end" width="15%">
 				                            	<input type="text" readonly class="form-control text-end valorProducto">
@@ -175,13 +195,13 @@
 				                        <!-- Producto 3 -->
 				                        <tr>
 				                            <td width="20%">
-				                            	<input type="text" class="form-control codigoProducto">
+				                            	<input type="text" name="codp3" class="form-control codigoProducto">
 				                            </td>
 				                            <td>
 				                            	<input type="text" readonly class="form-control nombreProducto">
 				                            </td>
 				                            <td width="10%">
-				                            	<input type="number" name="cantidadProducto" class="form-control cantidadProducto">
+				                            	<input type="number" name="canp3" class="form-control cantidadProducto">
 				                            </td>
 				                             <td class="text-end" width="15%">
 				                            	<input type="text" readonly class="form-control text-end valorProducto">
@@ -205,19 +225,21 @@
 				                </table>
 				            </div>
 				            <div class="d-grid gap-2">
-							  <button class="btn btn-success" type="button">Realizar Venta</button>
+							  <button class="btn btn-success" type="submit">Realizar Venta</button>
 							</div>
 				            </form>
 	                </div>            
 	             </div>
              </main>
+			</div>
 		</div>
-		
 	     <!-- Scripts Bootstrap & DataTables -->
 		<script type="text/javascript" src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/vendor/DataTables/datatables.min.js"></script>
 		<!-- Script FontAwesome -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+		<!-- Script Sweet AlertJS -->
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<!-- Script Productos -->
 		<script type="text/javascript" src="assets/js/scripts.js"></script>
 		<script type="text/javascript" src="assets/js/venta.js"></script>

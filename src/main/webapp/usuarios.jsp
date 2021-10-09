@@ -68,6 +68,18 @@
                                 <span class="sb-nav-link-icon"><i class="fas fa-credit-card"></i></span>
                                 Ventas
                             </a>
+                            <a class="nav-link collapsed" href="#collapseReportes" data-bs-toggle="collapse" data-bs-target="#collapseReportes" >
+                                <span class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></span>
+                                Reportes
+                                <span class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></span>
+                            </a>
+                            <div class="collapse" id="collapseReportes" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="reporteUsuarios.jsp">Usuarios</a>
+                                    <a class="nav-link" href="reporteClientes.jsp">Clientes</a>
+                                    <a class="nav-link" href="reporteVentasCliente.jsp">Ventas por cliente</a>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -204,6 +216,8 @@
 		<script type="text/javascript" src="assets/vendor/DataTables/datatables.min.js"></script>
 		<!-- Script FontAwesome -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+		<!-- Script Sweet AlertJS -->
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<!-- Script Usuarios -->
 		<script type="text/javascript" src="assets/js/scripts.js"></script>
 		<script type="text/javascript" src="assets/js/user.js"></script>

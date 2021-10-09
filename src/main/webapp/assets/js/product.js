@@ -52,12 +52,20 @@ $(document).ready(function(){
 	//Click boton borrar
 	tablaUsuarios.on('click', '.btnBorrar', function(){	
 		var codigo = $(this).attr("name")
-	 	var opcion = confirm("Esta seguro que desea borrar el registro: "+codigo);
-	    if(opcion == true){
-			eliminarProducto(codigo);
-		}else{
-		   
-		}
+	 	Swal.fire({
+			title: "Cuidado!",
+		  	text: "Esta seguro de eliminar el registro "+codigo+"?",
+		  	icon: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: '#3085d6',
+		  	cancelButtonColor: '#d33',
+		  	confirmButtonText: "Si, borrar el registro!",
+			cancelButtonText: "Cancelar"
+		}).then((result) => {
+			if (result.isConfirmed) {
+				eliminarProducto(codigo);
+		  	}
+		});
 	})
 	
 	//Click boton ver/editar
@@ -82,8 +90,14 @@ $(document).ready(function(){
 			success: function(resultado){
 				resultado = JSON.parse(resultado);
 				if(resultado[0].estado=="Ok"){
-					alert("Productos ingresados");
-					window.location.replace("productos.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Producto  agregado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("productos.jsp");
+					  }, 800);
 				}else{
 					alert(resultado[0].estado);
 				}
@@ -101,8 +115,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro actualizado");
-					window.location.replace("productos.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Producto actualizado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("productos.jsp");
+					  }, 800);
 				}
 			}
 		});
@@ -117,8 +137,14 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(resultado){
 				if(resultado[0].estado=="Ok"){
-					alert("Registro eliminado");
-					window.location.replace("productos.jsp");
+					Swal.fire(
+						"Proceso exitoso",
+					  	"Producto eliminado",
+					  	"success"
+					)
+					setTimeout(function(){
+					    window.location.replace("productos.jsp");
+					  }, 800);
 				}
 			}
 		});
