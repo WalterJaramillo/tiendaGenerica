@@ -14,6 +14,11 @@ public class DetalleVentaDAO {
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 
+	/**
+	 * Funcion para insertar detalle de venta
+	 * @param dto
+	 * @return
+	 */
 	public boolean insertarDetalleVenta(DetalleVentaDTO dto) {
 		
 		boolean result = false;

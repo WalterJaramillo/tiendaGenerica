@@ -43,7 +43,6 @@ public class UsuarioDAO {
 	/**
 	 * Función para listar Usuarios desde BD
 	 * @return Lista
-	 * @throws SQLException
 	 */
 	public ArrayList<UsuarioDTO> listarUsuarios(){
 		
@@ -71,7 +70,6 @@ public class UsuarioDAO {
 	 * Funcion para buscar usuario por cedula
 	 * @param cedula
 	 * @return UsuarioDTO
-	 * @throws SQLException
 	 */
 	public UsuarioDTO obtenerPorCedula(long cedula){
 		UsuarioDTO usuario = null;
@@ -97,6 +95,11 @@ public class UsuarioDAO {
 		return usuario;
 	}
 	
+	/**
+	 * Funcion para actualizar Usuario
+	 * @param dto
+	 * @return true/false
+	 */
 	public boolean actualizarUsuario(UsuarioDTO dto) {
 		boolean result = false;
 		try {

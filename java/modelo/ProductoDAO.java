@@ -94,7 +94,6 @@ public class ProductoDAO {
 	 * Funcion para buscar por codigo de producto
 	 * @param codigo
 	 * @return
-	 * @throws SQLException
 	 */
 	public ProductoDTO obtenerPorCodigo(long codigo){
 		ProductoDTO producto = null;

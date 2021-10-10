@@ -110,7 +110,7 @@ $(document).ready(function(){
 					)
 					setTimeout(function(){
 					    window.location.replace("ventas.jsp");
-					  }, 800);
+					}, 800);
 				}
 			}
 		});

@@ -42,7 +42,6 @@ public class ClienteDAO {
 	/**
 	 * Funcion para listar clientes desde la DB
 	 * @return
-	 * @throws SQLException
 	 */
 	public ArrayList<ClienteDTO> listarClientes(){
 		
@@ -76,7 +75,6 @@ public class ClienteDAO {
 	 * Funcion para buscar por codigo de producto
 	 * @param codigo
 	 * @return
-	 * @throws SQLException
 	 */
 	public ClienteDTO obtenerPorCedula(long cedula){
 		ClienteDTO cliente = null;
