@@ -1,3 +1,10 @@
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%
+HttpSession sesion = request.getSession();
+if(sesion.getAttribute("usuario") == null){
+	response.sendRedirect("index.jsp");
+}
+%>
 <%@ page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <html lang="es">
@@ -30,7 +37,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="index.jsp">Salir</a></li>
+                        <li><a class="dropdown-item" href="Login?out">Salir</a></li>
                     </ul>
                 </li>
             </ul>
@@ -84,7 +91,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logueado como:</div>
-                        Usuario
+                         ${sessionScope.nombreUsuario}
                     </div>
                 </nav>
             </div>

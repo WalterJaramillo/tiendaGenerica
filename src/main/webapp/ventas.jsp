@@ -1,8 +1,13 @@
-<%@ page language="java" contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="modelo.VentaDAO" %>
 <%
-	VentaDAO dao = new VentaDAO();
+HttpSession sesion = request.getSession();
+if(sesion.getAttribute("usuario") == null){
+	response.sendRedirect("index.jsp");
+}
+VentaDAO dao = new VentaDAO();
 %>
+<%@ page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <html lang="es">
  	<head>
@@ -35,7 +40,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="index.jsp">Salir</a></li>
+                        <li><a class="dropdown-item" href="Login?out">Salir</a></li>
                     </ul>
                 </li>
             </ul>
@@ -89,7 +94,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logueado como:</div>
-                        Usuario
+                        ${sessionScope.nombreUsuario}
                     </div>
                 </nav>
             </div>
@@ -146,7 +151,7 @@
 		                	<input type="hidden" name="codigoVenta" id="codigoVenta" value="<%=dao.consecutivoVenta() %>">
 		                	<input type="hidden" name="cedulaCliente" id="cedula">
 		                	<!-- //TODO sesion para usuario  -->
-		                	<input type="hidden" name="cedulaUsuario" value="123456789">
+		                	<input type="hidden" name="cedulaUsuario" value="${sessionScope.usuario}">
 		                	<input type="hidden" name="ivaVenta" id="iva">
 		                	<input type="hidden" name="totalVenta" id="subtotal">
 		                	<input type="hidden" name="valorVenta" id="total">
